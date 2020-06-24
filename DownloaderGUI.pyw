@@ -1,8 +1,11 @@
-from pytube import YouTube
-from tkinter import *
+from __future__ import unicode_literals
 from validators import url
-import subprocess
+from tkinter import *
+import youtube_dl
 import threading
+import os
+
+#https://www.youtube.com/watch?v=YyBYHNjQgrQ
 
 root = Tk()
 root.title(" YT Downloader V5.0")
@@ -21,21 +24,25 @@ def download():
             
             desired_file_name = (filename.get().replace(" ", "_"))
 
-            my_video = YouTube(url_stringvar.get())
-            my_video.streams.filter(adaptive=True, file_extension="mp4").first().download(filename=desired_file_name, output_path="downloadedvideos")
-        
-            if desiredformat.get() == 2: subprocess.run(f"ffmpeg -i downloadedvideos/{desired_file_name}.mp4 {desired_file_name}.mp3")
-            elif desiredformat.get() == 3: subprocess.run(f"ffmpeg -i downloadedvideos/{desired_file_name}.mp4 {desired_file_name}.wav")
+            ydl_opts = {
+                "fileformat": "bestaudio/best",
+                "outtmpl": f"downloaded_videos/{desired_file_name}.webm",
+            }
+
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                ydl.download(url_stringvar.get())
+
+            if desiredformat.get() == 1: os.system(f"ffmpeg -i downloaded_videos/{desired_file_name}.webm {desired_file_name}.mp4")
+            elif desiredformat.get() == 2: os.system(f"ffmpeg -i downloaded_videos/{desired_file_name}.webm {desired_file_name}.mp3")
+            elif desiredformat.get() == 3: os.system(f"ffmpeg -i downloaded_videos/{desired_file_name}.webm {desired_file_name}.wav")
+
+            os.remove(f"downloaded_videos/{desired_file_name}.webm")
 
             start_button.config(state=NORMAL)
 
-        else:
-            print(90)
-            start_button.config(state=NORMAL)
-            return None
+        else: return start_button.config(state=NORMAL)
 
-    except:
-        start_button.config(state=NORMAL)
+    except: start_button.config(state=NORMAL)
 
 def start_buttondownload():
     start_buttonthread = threading.Thread(target=download)
