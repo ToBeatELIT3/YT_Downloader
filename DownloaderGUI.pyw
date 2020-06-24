@@ -1,11 +1,10 @@
+#ToBeatElite
 from __future__ import unicode_literals
 from validators import url
 from tkinter import *
 import youtube_dl
 import threading
 import os
-
-#https://www.youtube.com/watch?v=YyBYHNjQgrQ
 
 root = Tk()
 root.title(" YT Downloader V5.0")
@@ -30,11 +29,11 @@ def download():
             }
 
             with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                ydl.download(url_stringvar.get())
+                ydl.download([url_stringvar.get()])
 
-            if desiredformat.get() == 1: os.system(f"ffmpeg -i downloaded_videos/{desired_file_name}.webm {desired_file_name}.mp4")
-            elif desiredformat.get() == 2: os.system(f"ffmpeg -i downloaded_videos/{desired_file_name}.webm {desired_file_name}.mp3")
-            elif desiredformat.get() == 3: os.system(f"ffmpeg -i downloaded_videos/{desired_file_name}.webm {desired_file_name}.wav")
+            if desiredformat.get() == 1: os.system(f"ffmpeg -i downloaded_videos/{desired_file_name}.webm downloaded_videos/{desired_file_name}.mp4")
+            elif desiredformat.get() == 2: os.system(f"ffmpeg -i downloaded_videos/{desired_file_name}.webm downloaded_videos/{desired_file_name}.mp3")
+            elif desiredformat.get() == 3: os.system(f"ffmpeg -i downloaded_videos/{desired_file_name}.webm downloaded_videos/{desired_file_name}.wav")
 
             os.remove(f"downloaded_videos/{desired_file_name}.webm")
 
